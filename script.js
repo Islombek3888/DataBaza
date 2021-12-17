@@ -9,6 +9,8 @@ let j;
 let id = 0
 let adds
 
+if (localStorage.getItem("id")) id=JSON.parse(localStorage.getItem("id"))
+else id = 0
 if (localStorage.getItem("data"))dbArr=JSON.parse(localStorage.getItem("data"))
 else dbArr = []
 
@@ -40,6 +42,7 @@ function add() {
         } else {
             alert(alyort);
         }
+        localStorage.setItem("id", JSON.stringify(id));
         localStorage.setItem("data", JSON.stringify(dbArr));
     } else {
         console.log(adds);
