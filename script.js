@@ -4,41 +4,44 @@ let login = document.querySelector(".text2")
 let paroll = document.querySelector(".text3")
 let tbody = document.querySelector(".tbody")
 let search = document.querySelector(".search")
-let dbArr = []
+let dbArr;
 let j;
 let id = 0
 let adds
 
+if (localStorage.getItem("data"))dbArr=JSON.parse(localStorage.getItem("data"))
+else dbArr = []
 
 
-function add(){
+function add() {
     let alyort = "";
-    if(fish.value==""){
+    if (fish.value == "") {
         alyort += "Ism familya va otasinig ismi kiritilmagan \n";
     }
-    if(login.value == ""){
+    if (login.value == "") {
         alyort += "Login kiritilmagan \n";
     }
-    if(paroll == ""){
+    if (paroll == "") {
         alyort += "Parol kiritilmagan"
     }
-    if (adds != 1){
-        if(alyort == ""){
+    if (adds != 1) {
+        if (alyort == "") {
             id++;
             dbArr.push({
-                id:id,
-                fish:fish.value,
-                login:login.value,
-                paroll:paroll.value
+                id: id,
+                fish: fish.value,
+                login: login.value,
+                paroll: paroll.value
             })
             display();
             fish.value = "";
             login.value = "";
             paroll.value = "";
-        }else{
+        } else {
             alert(alyort);
         }
-    }else{
+        localStorage.setItem("data", JSON.stringify(dbArr));
+    } else {
         console.log(adds);
         dbArr[j].fish = fish.value;
         dbArr[j].login = login.value;
@@ -48,45 +51,50 @@ function add(){
         login.value = "";
         paroll.value = "";
         adds = 0
+        localStorage.setItem("data", JSON.stringify(dbArr));
     }
 }
 
 
 
-function delet(e){
-    let q = document.querySelector(".id");
-    let index;
-    dbArr.find(function(i,index1){
-        index = index1;
-        return i.id == e.parentElement.dataset.id;
+function delet(e) {
+
+    let dbArr1 = dbArr.filter(i => {
+        return i.id != e.parentElement.dataset.id;
     })
-    dbArr.splice(index,1);
+    dbArr = dbArr1;
+    
     display()
+    localStorage.setItem("data", JSON.stringify(dbArr));
+
 }
 
 
 
 
-function edite(e){
+function edite(e) {
     adds = 1
-    let edit = dbArr.find(function(i,index){
+    let edit = dbArr.find(function (i, index) {
         j = index;
         return i.id == e.parentElement.dataset.id;
     })
     fish.value = edit.fish;
     login.value = edit.login;
     paroll.value = edit.paroll;
+    localStorage.setItem("data", JSON.stringify(dbArr));
+
+
 }
 
 
 
 
 
-function searchs(val){
+function searchs(val) {
     string = ""
     dbArr.filter(k => {
-            if (k.fish.startsWith(val)){
-                string += `
+        if (k.fish.startsWith(val)) {
+            string += `
                 <tr>
                 <th  scope="row" class="px-3 id">${k.id}</th>
                 <td>${k.fish}</td>
@@ -95,14 +103,14 @@ function searchs(val){
                 <td data-id=${k.id} class="px-0"><a href="#" onclick="edite(this)" class="link-warning"><i class="fas fa-pen"></i></a></td>
                 <td data-id=${k.id} class="px-0"><a href="#" onclick="delet(this)" class="link-warning"><i class="fas fa-trash-alt"></i></a></td>
                 </tr>`
-            }
-        
-        })
-        tbody.innerHTML = string
+        }
+
+    })
+    tbody.innerHTML = string
 }
 
 
-function clears(){
+function clears() {
     search.value = "";
     display()
 }
@@ -110,9 +118,9 @@ function clears(){
 
 
 
-function display(){
+function display() {
     let string = "";
-    dbArr.forEach(function(i){
+    dbArr.forEach(function (i) {
         string += `
         <tr>
         <th  scope="row" class="px-3">${i.id}</th>
